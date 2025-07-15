@@ -1,6 +1,7 @@
 import { z } from 'zod'
 
 export const TutorSchema = z.object({
+  company: z.string(),
   firstName: z.string(),
   lastName: z.string(),
   email: z.email(),

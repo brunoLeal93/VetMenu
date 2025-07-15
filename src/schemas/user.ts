@@ -1,10 +1,13 @@
 import { z } from 'zod'
+import companySchema from './company
 
 export const usuarioSchema = z.object({
-  nome: z.string().min(2, 'Nome é obrigatório'),
-  genero: z.enum(['masculino', 'feminino', 'outro'], {
-    errorMap: () => ({ message: 'Selecione um gênero' }),
+  name: z.string().min(2, 'Nome é obrigatório'),
+  email: z.email(),
+  type: z.enum(['Administrador', 'Afiliado', 'outro'], {
+    errorMap: () => ({ message: 'Selecione um tipo' }),
   }),
+  companies: z.array(companySchema).optional(),
   termos: z.literal(true, {
     errorMap: () => ({ message: 'Você deve aceitar os termos' }),
   }),
@@ -18,6 +21,15 @@ export const usuarioSchema = z.object({
       })
     )
     .min(1, 'Adicione ao menos um telefone'),
+}).superRefine((data, ctx) => {
+  if (data.type == 'Afiliado' && data.companies.empty()) {
+    ctx.addIssue(
+      path: ['companies'],
+      code: z.ZodIssueCode.custom,
+      message: 'Afiliado deve ter ao menos um empresa associada a ele',
+      )
+    
+  }
 })
 
 export type UsuarioFormData = z.infer<typeof usuarioSchema>

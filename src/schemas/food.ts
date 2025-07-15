@@ -7,7 +7,7 @@ export const FoodSchema = z.object({
   referenceCost: z.number(),
   ic: z.number(),
   rawAmount: z.number(),
-  produzedAmount: z.number(),
+  producedAmount: z.number(),
   defaultSupplier: z.string(),
   defaultNf: z.string()
 })
